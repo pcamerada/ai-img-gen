@@ -49,7 +49,7 @@ const CreatePost = () => {
     if(form.name && form.prompt && form.photo) {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:8080/api/v1/post',{
+        const response = await fetch('http://localhost:8080/api/v1/post/upload',{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
