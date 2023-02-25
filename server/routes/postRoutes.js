@@ -16,12 +16,33 @@ cloudinary.config({
 
 // GET ALL POSTS
 router.route('/').get( async (req, res) => {
+    const page = parseInt(req.query.page) || 0;
     try {
-        const posts = await Post.find({});
-        console.log(posts)
+        const posts = await Post.find({})
+            .skip(page > 0 ? (page - 1) * 10 : 0)
+            .limit(10);
         res.status(200).json({ success: true, data: posts });
     } catch (error) {
-        console.log(error);
+        res.status(500).send({success: false, message: error})
+    }
+})
+
+// FILTER POSTS
+// PARAM : PARAM
+router.route('/').post( async (req, res) => {
+    const { param } = req.body
+    try {
+        const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
+        const searchRgx = rgx(param);
+
+        const posts = await Post.find({
+            $or: [
+                { name: { $regex: searchRgx, $options: "i" } },
+                { prompt: { $regex: searchRgx, $options: "i" } },
+            ],
+        })
+        res.status(200).json({ success: true, data: posts });
+    } catch (error) {
         res.status(500).send({success: false, message: error})
     }
 })
@@ -39,7 +60,6 @@ router.route('/').post( async (req, res) => {
 
         res.status(200).json({ success: true, data: newPost });
     } catch (error) {
-        console.log(error);
         res.status(500).send({success: false, message: error})
     }
 })
