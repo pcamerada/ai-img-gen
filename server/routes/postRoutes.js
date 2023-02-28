@@ -18,9 +18,9 @@ cloudinary.config({
 router.route('/').get( async (req, res) => {
     const page = parseInt(req.query.page) || 0;
     try {
-        const posts = await Post.find({})
+        const posts = await Post.find({}).sort({_id: -1})
             .skip(page > 0 ? (page - 1) * 10 : 0)
-            .limit(10);
+            .limit(page ? page * 10 : 10);
         res.status(200).json({ success: true, data: posts });
     } catch (error) {
         res.status(500).send({success: false, message: error})

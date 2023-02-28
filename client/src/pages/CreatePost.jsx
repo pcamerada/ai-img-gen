@@ -65,7 +65,7 @@ const CreatePost = () => {
         setLoading(false)
       }
     } else {
-      openAlert('PLease compile the form and generate an image', 'info')
+      openAlert('Please compile the form and generate an image', 'info')
     }
   }
 
